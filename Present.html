@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lean Villa Book</title>
+  <style>
+/* ======================================================
+   RESET
+====================================================== */
+*,
+*::before,
+*::after{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+img{
+  display:block;
+  max-width:100%;
+}
+
+/* ======================================================
+   ROOT VARIABLES (Dễ chỉnh theme)
+====================================================== */
+:root{
+  --bg-dark:#111;
+  --text-light:#fff;
+  --text-dark:#222;
+
+  --accent:#f1c93b;
+
+  --page-radius:14px;
+  --shadow-strong:0 40px 120px rgba(0,0,0,.6);
+
+  --transition-slow:1.6s cubic-bezier(.65,0,.2,1);
+}
+
+/* ======================================================
+   FONTS
+====================================================== */
+@font-face{
+  font-family:"Avo";
+  src:url("Fonts/UTM_Avo.ttf") format("truetype");
+  font-display:swap;
+}
+
+@font-face{
+  font-family:"God";
+  src:url("Fonts/Playfair.ttf") format("truetype");
+  font-display:swap;
+}
+
+/* ======================================================
+   BODY
+====================================================== */
+body{
+  background:var(--bg-dark);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  font-family:"Avo", sans-serif;
+  color:var(--text-dark);
+}
+
+/* ======================================================
+   STAGE (3D Perspective)
+====================================================== */
+.stage{
+  width:95vw;
+  height:90vh;
+  perspective:4000px;
+  position:relative;
+}
+
+/* ======================================================
+   BOOK
+====================================================== */
+.book{
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+}
+
+/* ======================================================
+   PAGE BASE
+====================================================== */
+.page{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+
+  background:#fff;
+  border-radius:var(--page-radius);
+  overflow:hidden;
+
+  transform-origin:left center;
+  transform-style:preserve-3d;
+  transition:transform var(--transition-slow);
+
+  box-shadow:var(--shadow-strong);
+
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+
+  will-change:transform;
+}
+
+/* Trạng thái lật */
+.page.flipped{
+  transform:rotateY(-180deg);
+}
+
+/* ======================================================
+   GENERIC IMAGE PAGE
+====================================================== */
+.page > img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* ======================================================
+   COVER
+====================================================== */
+.cover-page{
+  position:relative;
+}
+
+.cover{
+  background:var(--bg-dark);
+  color:var(--text-light);
+
+  height:100%;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  gap:10px;
+}
+
+.cover h1{
+  font-family:"God", serif;
+  font-size:42px;
+  letter-spacing:2px;
+}
+
+.cover p{
+  font-size:14px;
+  letter-spacing:1.5px;
+  opacity:.8;
+}
+
+/* Brand Bottom */
+.cover-brand{
+  position:absolute;
+  bottom:40px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.cover-brand img{
+  height:32px;
+}
+
+.cover-brand .brand-name{
+  font-family:"God", serif;
+  font-size:18px;
+  letter-spacing:2px;
+  color:var(--text-light);
+}
+
+/* ======================================================
+   CHAPTER COVER
+====================================================== */
+.chapter-cover{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  color:var(--text-light);
+  overflow:hidden;
+}
+
+.chapter-cover .bg-blur{
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  filter:blur(10px) brightness(.5);
+  transform:scale(1.15);
+}
+
+.chapter-content{
+  position:relative;
+  z-index:2;
+}
+
+.chapter-content h2{
+  font-family:"God", serif;
+  font-size:48px;
+  letter-spacing:5px;
+  margin-bottom:10px;
+}
+
+/* ======================================================
+   VOID LAYOUT (50 / 50)
+====================================================== */
+.layout-void{
+  display:flex;
+  background:#e6e6e6;
+}
+
+.layout-void .left-img{
+  width:50%;
+}
+
+.layout-void .left-img img{
+  height:100%;
+  object-fit:cover;
+}
+
+.layout-void .right-content{
+  width:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:40px;
+}
+
+.layout-void .text-box{
+  width:65%;
+  background:var(--accent);
+  padding:45px 50px;
+  font-size:14px;
+  line-height:1.8;
+  text-align:center;
+  color:var(--text-dark);
+}
+
+.layout-void .text-box .en{
+  font-style:italic;
+  opacity:.75;
+  display:block;
+}
+
+/* ======================================================
+   TWO IMAGES PAGE
+====================================================== */
+.two-images{
+  background:#1c1c1c;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.two-images .gallery{
+  width:90%;
+  height:88%;
+  display:flex;
+  gap:5vw;
+}
+
+.two-images .img{
+  flex:1;
+  background:#fff;
+  overflow:hidden;
+}
+
+.two-images img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* ======================================================
+   IMAGE OVERLAY
+====================================================== */
+.image-overlay{
+  position:absolute;
+  bottom:40px;
+  right:60px;
+
+  width:480px;
+  padding:30px;
+
+  background:rgba(240,240,240,.92);
+  color:#333;
+
+  font-size:13px;
+  line-height:1.8;
+
+  transition:opacity .4s ease;
+}
+
+.image-overlay::after{
+  content:"";
+  display:block;
+  width:60px;
+  height:2px;
+  background:#c9a45c;
+  margin-top:15px;
+}
+
+.page.flipped .image-overlay{
+  opacity:0;
+}
+
+/* ======================================================
+   PAGE 6 – GRID 4 LAYOUT
+====================================================== */
+
+.layout-grid-4{
+  display:flex;
+  width:100%;
+  height:100%;
+  background:#e9e9e9;
+  padding:60px 80px;
+  gap:80px;
+}
+
+/* LEFT SIDE */
+.grid-left{
+  width:55%;
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:30px;
+}
+
+.grid-left img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* RIGHT SIDE */
+.content-right{
+  width:45%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.text-container{
+  max-width:420px;
+  font-size:15px;
+  line-height:1.9;
+  color:#333;
+  text-align:center;
+}
+
+.text-container p{
+  margin-bottom:22px;
+}
+
+.text-container .en{
+  font-style:italic;
+  color:#444;
+}
+
+/* ======================================================
+   MOBILE
+====================================================== */
+@media(max-width:768px){
+
+  body{
+    overflow:auto;
+  }
+
+  .stage{
+    width:100vw;
+    height:100vh;
+  }
+
+  .layout-void{
+    flex-direction:column;
+  }
+
+  .layout-void .left-img,
+  .layout-void .right-content{
+    width:100%;
+    height:50%;
+  }
+
+  .two-images .gallery{
+    flex-direction:column;
+    gap:30px;
+  }
+
+  .layout-grid-4{
+    flex-direction:column;
+  }
+
+  .grid-left,
+  .content-right{
+    width:100%;
+  }
+
+  .content-right{
+    padding-left:0;
+    padding-top:40px;
+  }
+
+}
+  </style>
+</head>
+<body>
+
+<div class="stage">
+    <div class="book" id="book">
+
+      <!-- ================= COVER ================= -->
+      <div class="page cover-page">
+        <div class="cover">
+          <h1>LEAN VILLA</h1>
+          <p>Điểm tựa tinh thần</p>
+        </div>
+
+        <div class="cover-brand">
+          <img src="Dreamese_Studio.png" alt="Dreamese Studio Logo">
+          <h2 class="brand-name">Dreamese Studio</h2>
+        </div>
+      </div>
+
+
+      <!-- ================= CHAPTER COVER ================= -->
+      <div class="page cover-page">
+        <div class="cover">
+          <h1>PHƯƠNG ÁN THIẾT KẾ KIẾN TRÚC</h1>
+          <p>Điểm tựa tinh thần</p>
+        </div>
+
+        <div class="cover-brand">
+          <img src="Dreamese_Studio.png" alt="Dreamese Studio Logo">
+          <h2 class="brand-name">Dreamese Studio</h2>
+        </div>
+      </div>
+
+      <!-- ================= PAGE 2 ================= -->
+      <div class="page">
+        <img src="Lean_Villa/ExC_01.1.jpg" alt="Exterior View">
+      </div>
+
+
+      <!-- ================= PAGE 3 – VOID LAYOUT ================= -->
+      <div class="page layout-void">
+
+        <div class="left-img">
+          <img src="Lean_Villa/Altar_01.1.jpg" alt="Void Space">
+        </div>
+
+        <div class="right-content">
+          <div class="text-box">
+
+            <p>
+              Trong thiết kế này, thông tầng là một thành phần có giá trị
+              cực kỳ quan trọng trong ngôi nhà. Nó có tác động kết nối
+              các không gian, và cũng như nhắc nhớ sự tồn tại của
+              những thành phần khác.
+            </p>
+
+            <p>
+              Bên cạnh đó, thông tầng có vai trò quan trọng trong việc
+              đối lưu không khí, giúp cho ngôi nhà trở nên thông thoáng hơn;
+              với cả cũng giúp tạo ra các lớp tầm nhìn bứt phá,
+              mang lại những giá trị vô hình cho ngôi nhà.
+            </p>
+
+            <br>
+
+            <p class="en">
+              In this design, the void is an extremely important part of the house.
+              It helps connecting spaces together and reminds the existence of other components as well.
+            </p>
+
+            <p class="en">
+              Besides, the void plays a key role in air circulation,
+              creating layered perspectives and bringing numerous invisible values.
+            </p>
+
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- ================= PAGE 4 – TWO IMAGES ================= -->
+      <div class="page two-images">
+        <div class="gallery">
+          <div class="img">
+            <img src="Lean_Villa/Altar_01.1.jpg" alt="Altar 01">
+          </div>
+
+          <div class="img">
+            <img src="Lean_Villa/Altar_01.1.jpg" alt="Altar 02">
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ================= PAGE 5 – IMAGE OVERLAY ================= -->
+      <div class="page">
+        <img src="Lean_Villa/ExC_01.1.jpg" alt="Touch Villa">
+
+        <div class="image-overlay">
+          <h3>Touch Villa</h3>
+          <p>
+            Somehow and other, contemporary life has created distance
+            between people and essential family members...
+          </p>
+        </div>
+      </div>
+
+
+      <!-- ================= PAGE 6 – GRID 4 ================= -->
+      <div class="page layout-grid-4">
+
+        <div class="grid-left">
+          <img src="Lean_Villa/Lands_01.1.jpg" alt="Landscape 01">
+          <img src="Lean_Villa/Lands_01.1.jpg" alt="Landscape 02">
+          <img src="Lean_Villa/Lands_01.1.jpg" alt="Landscape 03">
+          <img src="Lean_Villa/Lands_01.1.jpg" alt="Landscape 04">
+        </div>
+
+        <div class="content-right">
+          <div class="text-container">
+
+            <p>
+              Từ kinh nghiệm, rõ ràng việc đặt bản thân vào đối tượng người tiêu dùng
+              là cách tốt nhất để tạo nên một thiết kế hữu dụng và hiệu quả.
+            </p>
+
+            <p>
+              Lịch sử Văn hóa Việt Nam ghi nhận,
+              người Việt Nam giỏi trong việc học hỏi và tiếp biến sáng tạo...
+            </p>
+
+            <p class="en">
+              From professional experience,
+              clearly putting oneself into the client's position
+              is the best way to create a useful and effective design.
+            </p>
+
+            <p class="en">
+              Vietnamese cultural history shows a strong ability
+              in learning, adapting and creatively transforming ideas.
+            </p>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const book = document.getElementById("book");
+  const pages = Array.from(document.querySelectorAll(".page"));
+
+  let currentIndex = 0;
+  let isAnimating = false;
+  const totalPages = pages.length;
+
+  /* =========================================
+     SET INITIAL Z-INDEX
+  ========================================== */
+  function setZIndex() {
+    pages.forEach((page, index) => {
+      page.style.zIndex = totalPages - index;
+    });
+  }
+
+  setZIndex();
+
+  /* =========================================
+     GO NEXT PAGE
+  ========================================== */
+  function nextPage() {
+    if (currentIndex >= totalPages || isAnimating) return;
+
+    isAnimating = true;
+
+    pages[currentIndex].classList.add("flipped");
+    currentIndex++;
+
+    setTimeout(() => {
+      isAnimating = false;
+    }, 1600);
+  }
+
+  /* =========================================
+     GO PREVIOUS PAGE
+  ========================================== */
+  function prevPage() {
+    if (currentIndex <= 0 || isAnimating) return;
+
+    isAnimating = true;
+
+    currentIndex--;
+    pages[currentIndex].classList.remove("flipped");
+
+    setTimeout(() => {
+      isAnimating = false;
+    }, 1600);
+  }
+
+  /* =========================================
+     CLICK EVENT (LEFT / RIGHT)
+  ========================================== */
+  book.addEventListener("click", (e) => {
+
+    const rect = book.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const half = rect.width / 2;
+
+    if (clickX > half) {
+      nextPage();
+    } else {
+      prevPage();
+    }
+
+  });
+
+  /* =========================================
+     KEYBOARD SUPPORT
+  ========================================== */
+  document.addEventListener("keydown", (e) => {
+
+    if (e.key === "ArrowRight") {
+      nextPage();
+    }
+
+    if (e.key === "ArrowLeft") {
+      prevPage();
+    }
+
+  });
+
+});
+</script>
+</body>
+</html>
